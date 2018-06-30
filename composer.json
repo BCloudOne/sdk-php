@@ -1,10 +1,10 @@
 {
-  "name": "BCloudOne/sdk-php",
+  "name": "bcloudone/sdk-php",
   "description": "php sdk for bcloud.one",
+  "homepage": "https://github.com/BCloudOne/sdk-php",
   "type": "library",
   "require": {
-    "php": ">=5.3.0",
-    "rmccue/requests": "^1.7"
+    "php": ">=5.3.0"
   },
   "authors": [
     {
