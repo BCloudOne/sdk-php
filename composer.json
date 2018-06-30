@@ -1,0 +1,20 @@
+{
+  "name": "BCloudOne/sdk-php",
+  "description": "php sdk for bcloud.one",
+  "type": "library",
+  "require": {
+    "php": ">=5.3.0",
+    "rmccue/requests": "^1.7"
+  },
+  "authors": [
+    {
+      "name": "BCloudOne",
+      "email": "admin@bcloud.one"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "BCloudOne\\": "src/BCloudOne"
+    }
+  }
+}
