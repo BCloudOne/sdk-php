@@ -13,7 +13,9 @@ class Product
 {
     private $accessKey = null;
     private $secretKey = null;
-    const BCLOUD_API_URL = "https://api.bcloud.one/v1/";
+    const BCLOUD_API_URL = "https://api.bcloud.one/api/v1/";
+    //const BCLOUD_API_URL = "http://bcloud-openapi.testapi.pw/api/v1/";
+    //const BCLOUD_API_URL = "http://dev.open.bcloud.com/";
 
     function __construct($accessKey, $secretKey)
     {
@@ -24,7 +26,7 @@ class Product
     function header()
     {
         return [
-            "ACCESS-KEY" => $this->accessKey
+            "ACCESS-KEY: {$this->accessKey}",
         ];
     }
 
@@ -50,12 +52,25 @@ class Product
     function signParam(&$params)
     {
         $params["timestamp"] = time();
+        
         ksort($params);
-        $string = '';
         foreach ($params as $key => $value) {
-            $string .= $key . '=' . $value;
+            $tmp[] = $key . '=' . $value;
         }
-        $sign = md5($string . $this->secretKey);
+        $string = implode('&', $tmp);
+        $sign = base64_encode(hash_hmac('sha256', $string, $this->secretKey, true));
         $params["sign"] = $sign;
+    }
+    
+    /**
+     * 检查是否有错误，并抛出异常
+     * @param unknown $res
+     * @throws BCloudException
+     */
+    public function checkError($res)
+    {
+        if (!$res || $res['code'] != 0) {
+            throw new BCloudException($res['message'], $res['code']);
+        }
     }
 }
