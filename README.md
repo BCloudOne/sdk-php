@@ -30,7 +30,7 @@ $address_info  = [
 ```
 
 ### 链接
-BCloud控制台：[https://console.bcloud.one](https://console.bcloud.one)
-BCloud官网：[https://www.bcloud.one/](https://www.bcloud.one/)
-BCloud接口文档：[https://docs.bcloud.one/](https://docs.bcloud.one/)
+* BCloud控制台：[https://console.bcloud.one](https://console.bcloud.one)
+* BCloud官网：[https://www.bcloud.one/](https://www.bcloud.one/)
+* BCloud接口文档：[https://docs.bcloud.one/](https://docs.bcloud.one/)
 
