@@ -15,9 +15,9 @@ $ composer require bcloudone/sdk-php
 use BCloudOne\PaymentService
 
 try {
-    //传入从BCloud控制台申请的密钥
-    $PaymentService = new PaymentService($access_key, $secret_key);
-    $address_info = $PaymentService->getNewWalletAddress($coin, $uid);
+    //传入RSA公私钥以及秘钥ID
+    $PaymentService = new PaymentService($publicKey, $privateKey, $accessId);
+    $address_info = $PaymentService->getNewWalletAddress($coin, $user_tag);
 } catch (BCloudException $e) {
     //异常处理
     $this->fail(ResponseService::ERROR_MISSING_PARAM, $e->getMessage());
@@ -33,4 +33,6 @@ $address_info  = [
 * BCloud控制台：[https://console.bcloud.one](https://console.bcloud.one)
 * BCloud官网：[https://www.bcloud.one/](https://www.bcloud.one/)
 * BCloud接口文档：[https://docs.bcloud.one/](https://docs.bcloud.one/)
+
+
 
