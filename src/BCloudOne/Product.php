@@ -11,22 +11,21 @@ namespace BCloudOne;
 
 class Product
 {
-    private $accessKey = null;
-    private $secretKey = null;
-    const BCLOUD_API_URL = "https://api.bcloud.one/api/v1/";
-    //const BCLOUD_API_URL = "http://bcloud-openapi.testapi.pw/api/v1/";
-    //const BCLOUD_API_URL = "http://dev.open.bcloud.com/";
+    private $publicKey  = null;
+    private $privateKey = null;
+    private $accessId   = null;
+    const BCLOUD_API_URL = "https://api.bcloud.one/v1/";
 
-    function __construct($accessKey, $secretKey)
+    function __construct($publicKey, $privateKey, $accessId)
     {
-        $this->accessKey = $accessKey;
-        $this->secretKey = $secretKey;
+        $this->publicKey  = $publicKey;
+        $this->privateKey = $privateKey;
+        $this->accessId   = $accessId;
     }
 
     function header()
     {
         return [
-            "ACCESS-KEY: {$this->accessKey}",
         ];
     }
 
@@ -49,19 +48,26 @@ class Product
         return json_decode($res, true);
     }
 
+    /**
+     * RSA 私钥签名
+     * @param $params
+     */
     function signParam(&$params)
     {
         $params["timestamp"] = time();
-        
+        $params['access_id']  = $this->accessId;
+
         ksort($params);
         foreach ($params as $key => $value) {
             $tmp[] = $key . '=' . $value;
         }
         $string = implode('&', $tmp);
-        $sign = base64_encode(hash_hmac('sha256', $string, $this->secretKey, true));
+
+        openssl_sign($string, $sign,$this->privateKey,OPENSSL_ALGO_SHA256);
+        $sign = base64_encode($sign);
         $params["sign"] = $sign;
     }
-    
+
     /**
      * 检查是否有错误，并抛出异常
      * @param unknown $res
@@ -73,4 +79,5 @@ class Product
             throw new BCloudException($res['message'], $res['code']);
         }
     }
+
 }

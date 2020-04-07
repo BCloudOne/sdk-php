@@ -16,102 +16,51 @@ class PaymentService extends Product
      * @param $coin
      * @param $user_tag
      * @return array
+     * @throws BCloudException
      */
     function getNewWalletAddress($coin, $user_tag)
     {
         $param = [
-            "coin" => $coin,
-            "uid" => $user_tag,
+            "coin"      => $coin,
+            "user_tag"  => $user_tag,
         ];
         $res = $this->post("deposit/address", $param);
         $this->checkError($res);
         return $res['data'];
     }
-    
+
     /**
      * 申请提现
-     * @param int $user_id
+     * @param int $user_tag
      * @param int $order_id
      * @param string $coin
      * @param int|float $amount
      * @param string $address
      * @param string $address_tag
      * @return string
+     * @throws BCloudException
      */
-    public function WithdrawApply($user_id, $order_id, $coin, $amount, $address, $address_tag = '')
+    public function WithdrawApply($user_tag, $order_id, $coin, $amount, $address, $address_tag = '')
     {
         $param = [
-            'user_id' => $user_id,
+            'user_tag' => $user_tag,
             'order_id' => $order_id,
-            'coin' => $coin,
-            'amount' => $amount,
-            'address' => $address,
+            'coin'     => $coin,
+            'amount'   => $amount,
+            'address'  => $address,
             'address_tag' => $address_tag,
         ];
         $res = $this->post("withdraw/apply", $param);
         $this->checkError($res);
         return $res['data'];
     }
-    
-    /**
-     * 获取提现配置
-     * @return array
-     */
-    public function getWithdrawConfig()
-    {
-        $res = $this->get("withdraw/config", []);
-        $this->checkError($res);
-        return $res['data'];
-    }
-    /**
-     * 更新提现配置
-     * @param string $callback
-     * @param string $confirm_type only_confirm/twice_notify/every_time
-     * @return bool
-     */
-    public function updateWithdrawConfig($callback, $confirm_type)
-    {
-        $param = [
-            'callback' => $callback,
-            'confirm_type' => $confirm_type,
-        ];
-        $res = $this->post("withdraw/config", $param);
-        $this->checkError($res);
-        return $res['data'];
-    }
-    /**
-     * 获取充值配置
-     * @return array
-     */
-    public function getDepositConfig()
-    {
-        $res = $this->get("withdraw/config", []);
-        $this->checkError($res);
-        return $res['data'];
-    }
-    /**
-     * 更新充值配置
-     * @param string $callback
-     * @param string $confirm_type only_confirm/twice_notify/every_time
-     * @return bool
-     */
-    public function updateDepositConfig($callback, $confirm_type)
-    {
-        $param = [
-            'callback' => $callback,
-            'confirm_type' => $confirm_type,
-        ];
-        $res = $this->post("deposit/config", $param);
-        $this->checkError($res);
-        return $res['data'];
-    }
-    
-    
+
     /**
      * 根据币种和交易hash查询充值订单信息
      * @param string $coin
      * @param string $tx_hash
      * @return array
+     * @throws BCloudException
      */
     public function getDepositOrderByTxhash($coin, $tx_hash)
     {
@@ -123,11 +72,13 @@ class PaymentService extends Product
         $this->checkError($res);
         return $res['data'];
     }
+
     /**
      * 根据币种和交易hash查询提现订单信息
      * @param string $coin
      * @param string $tx_hash
      * @return array
+     * @throws BCloudException
      */
     public function getWithdrawOrderByTxhash($coin, $tx_hash)
     {
@@ -136,6 +87,31 @@ class PaymentService extends Product
             'tx_hash' => $tx_hash,
         ];
         $res = $this->post("withdraw/order_info", $param);
+        $this->checkError($res);
+        return $res['data'];
+    }
+
+    /**
+     * 根据币种获取订单列表(支持基础筛选)
+     * @param $coin
+     * @param string $start_time
+     * @param string $end_time
+     * @param string $order_id
+     * @param string $wallet_address
+     * @param string $page
+     * @return array
+     * @throws BCloudException
+     */
+    public function getWithdrawOrderList($coin,$start_time = '',$end_time = '',$order_id = '',$wallet_address = '',$page = ''){
+        $param = [
+            'coin'           => $coin,
+            'start_time'     => $start_time,
+            'end_time'       => $end_time,
+            'order_id'       => $order_id,
+            'page'           => $page,
+            'wallet_address' => $wallet_address,
+        ];
+        $res = $this->post("withdraw/order_list", $param);
         $this->checkError($res);
         return $res['data'];
     }
