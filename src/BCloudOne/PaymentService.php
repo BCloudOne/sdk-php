@@ -25,8 +25,7 @@ class PaymentService extends Product
             "user_tag"  => $user_tag,
         ];
         $res = $this->post("deposit/address", $param);
-        $this->checkError($res);
-        return $res['data'];
+        return $res;
     }
 
     /**
@@ -51,8 +50,7 @@ class PaymentService extends Product
             'address_tag' => $address_tag,
         ];
         $res = $this->post("withdraw/apply", $param);
-        $this->checkError($res);
-        return $res['data'];
+        return $res;
     }
 
     /**
@@ -69,8 +67,7 @@ class PaymentService extends Product
             'tx_hash' => $tx_hash,
         ];
         $res = $this->post("deposit/order_info", $param);
-        $this->checkError($res);
-        return $res['data'];
+        return $res;
     }
 
     /**
@@ -87,8 +84,7 @@ class PaymentService extends Product
             'tx_hash' => $tx_hash,
         ];
         $res = $this->post("withdraw/order_info", $param);
-        $this->checkError($res);
-        return $res['data'];
+        return $res;
     }
 
     /**
@@ -112,8 +108,7 @@ class PaymentService extends Product
             'wallet_address' => $wallet_address,
         ];
         $res = $this->post("withdraw/order_list", $param);
-        $this->checkError($res);
-        return $res['data'];
+        return $res;
     }
     
     

@@ -29,23 +29,40 @@ class Product
         ];
     }
 
+    /**
+     * @param $path
+     * @param $params
+     * @return mixed
+     * @throws BCloudException
+     */
     function get($path, $params)
     {
-        $this->signParam($params);
-        $body = Request::get(self::BCLOUD_API_URL . $path, $params, $this->header());
-        $res = json_decode($body, true);
-        if ($res["code"] != 0) {
-            throw new BCloudException($res["message"], $res["code"]);
-        } else {
-            return $res["data"];
+        try{
+            $this->signParam($params);
+            $body = Request::get(self::BCLOUD_API_URL . $path, $params, $this->header());
+            $res = json_decode($body, true);
+        }catch(\Exception $e) {
+            throw new BCloudException("钱包api服务请求异常");
         }
+        return $res;
     }
 
+    /**
+     * @param $path
+     * @param $data
+     * @return mixed
+     * @throws BCloudException
+     */
     function post($path, $data)
     {
-        $this->signParam($data);
-        $res = Request::post(self::BCLOUD_API_URL . $path, $data, $this->header());
-        return json_decode($res, true);
+        try{
+            $this->signParam($data);
+            $res = Request::post(self::BCLOUD_API_URL . $path, $data, $this->header());
+            $res = json_decode($res, true);
+        }catch(\Exception $e) {
+            throw new BCloudException("钱包api服务请求异常");
+        }
+        return $res;
     }
 
     /**
@@ -66,18 +83,6 @@ class Product
         openssl_sign($string, $sign,$this->privateKey,OPENSSL_ALGO_SHA256);
         $sign = base64_encode($sign);
         $params["sign"] = $sign;
-    }
-
-    /**
-     * 检查是否有错误，并抛出异常
-     * @param unknown $res
-     * @throws BCloudException
-     */
-    public function checkError($res)
-    {
-        if (!$res || $res['code'] != 0) {
-            throw new BCloudException($res['message'], $res['code']);
-        }
     }
 
 }
