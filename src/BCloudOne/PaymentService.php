@@ -54,6 +54,50 @@ class PaymentService extends Product
     }
 
     /**
+     * 发起网关支付订单
+     * @param $title
+     * @param $currency_type
+     * @param $value
+     * @param $callback_url
+     * @param $return_url
+     * @param $merc_order_id
+     * @param $order_type
+     * @param $is_convert
+     * @return mixed
+     * @throws BCloudException
+     */
+    public function GatewayApply($title, $currency_type, $value, $callback_url, $return_url, $merc_order_id, $order_type, $is_convert)
+    {
+        $param = [
+            'title'         => $title,
+            'currency_type' => $currency_type,
+            'value'         => $value,
+            'callback_url'  => $callback_url,
+            'return_url'    => $return_url,
+            'merc_order_id' => $merc_order_id,
+            "order_type"    => $order_type,
+            "is_convert"    => $is_convert
+        ];
+        $res = $this->post("gateway/apply", $param);
+        return $res;
+    }
+
+    /**
+     * 根据商户订单号查询网关订单信息
+     * @param $order_id
+     * @return mixed
+     * @throws BCloudException
+     */
+    public function getGatewayOrderById($order_id)
+    {
+        $param = [
+            'order_id' => $order_id,
+        ];
+        $res = $this->post("gateway/order_info", $param);
+        return $res;
+    }
+
+    /**
      * 根据币种和交易hash查询充值订单信息
      * @param string $coin
      * @param string $tx_hash
