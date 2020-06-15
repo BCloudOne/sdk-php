@@ -36,7 +36,7 @@ class PaymentService extends Product
      * @param int|float $amount
      * @param string $address
      * @param string $address_tag
-     * @return string
+     * @return array
      * @throws BCloudException
      */
     public function WithdrawApply($user_tag, $order_id, $coin, $amount, $address, $address_tag = '')
@@ -63,7 +63,7 @@ class PaymentService extends Product
      * @param $merc_order_id
      * @param $order_type
      * @param $is_convert
-     * @return mixed
+     * @return array
      * @throws BCloudException
      */
     public function GatewayApply($title, $currency_type, $value, $callback_url, $return_url, $merc_order_id, $order_type, $is_convert)
@@ -85,7 +85,7 @@ class PaymentService extends Product
     /**
      * 根据商户订单号查询网关订单信息
      * @param $order_id
-     * @return mixed
+     * @return array
      * @throws BCloudException
      */
     public function getGatewayOrderById($order_id)
@@ -115,45 +115,34 @@ class PaymentService extends Product
     }
 
     /**
-     * 根据币种和交易hash查询提现订单信息
+     * 查询提现订单信息
      * @param string $coin
      * @param string $tx_hash
+     * @param string $order_id
      * @return array
      * @throws BCloudException
      */
-    public function getWithdrawOrderByTxhash($coin, $tx_hash)
+    public function getWithdrawOrderByTxhash($coin, $tx_hash, $order_id)
     {
         $param = [
             'coin' => $coin,
             'tx_hash' => $tx_hash,
+            'order_id' => $order_id,
         ];
         $res = $this->post("withdraw/order_info", $param);
         return $res;
     }
 
     /**
-     * 根据币种获取订单列表(支持基础筛选)
-     * @param $coin
-     * @param string $start_time
-     * @param string $end_time
-     * @param string $order_id
-     * @param string $wallet_address
-     * @param string $page
+     * 获取支持币种的列表
      * @return array
      * @throws BCloudException
      */
-    public function getWithdrawOrderList($coin,$start_time = '',$end_time = '',$order_id = '',$wallet_address = '',$page = ''){
+    public function getSupportCoinsList(){
         $param = [
-            'coin'           => $coin,
-            'start_time'     => $start_time,
-            'end_time'       => $end_time,
-            'order_id'       => $order_id,
-            'page'           => $page,
-            'wallet_address' => $wallet_address,
         ];
-        $res = $this->post("withdraw/order_list", $param);
+        $res = $this->get("coin/list", $param);
         return $res;
     }
-    
     
 }
